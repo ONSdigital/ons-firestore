@@ -20,8 +20,8 @@ Gem::Specification.new do |s|
   s.license               = 'MIT'
   s.required_ruby_version = '>= 3.0.0'
 
-  s.add_runtime_dependency 'google-cloud-firestore'
-  s.add_development_dependency 'bundler'
-  s.add_development_dependency 'rake'
-  s.add_development_dependency 'rubocop'
+  s.add_runtime_dependency 'google-cloud-firestore', '~> 2.6'
+  s.add_development_dependency 'bundler', '~> 2.3'
+  s.add_development_dependency 'rake', '~> 13.0'
+  s.add_development_dependency 'rubocop', '~> 1.17'
 end
