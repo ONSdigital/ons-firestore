@@ -61,7 +61,7 @@ class Firestore
     if data.is_a?(Hash)
       hash_data = {}
       data.each do |key, value|
-        hash_data[key] = value.map(&:to_h)
+        hash_data[key] = value.respond_to?(:to_h) ? value.map(&:to_h) : value
       end
     end
 
