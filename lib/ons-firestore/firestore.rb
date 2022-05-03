@@ -22,7 +22,7 @@ class Firestore
   # Returns all Firestore documents within a collection.
   #
   # @param collection_name [String] the name of the Firestore collection containing the documents
-  # @return [Enumberator] list of documents within the collection
+  # @return [Enumerator] list of documents within the collection
   # @raise [ArgumentError] if collection_name is nil
   def all_documents(collection_name)
     raise ArgumentError.new('collection_name cannot be nil') if collection_name.nil?
