@@ -10,10 +10,8 @@ class Firestore
 
   # Constructor that initialises the Firestore client.
   #
-  # Params:
-  # - project_id: The ID of the GCP project containing the Firestore database.
-  #
-  # An Argument error is raised if project_id is nil.
+  # @param project_id [String] the ID of the GCP project containing the Firestore database
+  # @raise [ArgumentError] if project_id is nil
   def initialize(project_id)
     raise ArgumentError.new('project_id cannot be nil') if project_id.nil?
 
@@ -21,13 +19,36 @@ class Firestore
     @client = Google::Cloud::Firestore.new
   end
 
-  # Reads a Firestore document.
+  # Returns all Firestore documents within a collection.
   #
-  # Params:
-  # - collection_name: The name of the Firestore collection containing the document.
-  # - document_name: The name of the Firestore document.
+  # @param collection_name [String] the name of the Firestore collection containing the documents
+  # @return [Enumberator] list of documents within the collection
+  # @raise [ArgumentError] if collection_name is nil
+  def all_documents(collection_name)
+    raise ArgumentError.new('collection_name cannot be nil') if collection_name.nil?
+
+    @client.col(collection_name).list_documents.all
+  end
+
+  # Returns a reference to a Firestore document.
   #
-  # An Argument error is raised if collection_name or document_name are nil.
+  # @param collection_name [String] the name of the Firestore collection containing the document
+  # @param document_name [String] the name of the Firestore document
+  # @return [Google::Cloud::Firestore::DocumentReference] reference to the document
+  # @raise [ArgumentError] if collection_name or document_name are nil
+  def document_reference(collection_name, document_name)
+    raise ArgumentError.new('collection_name cannot be nil') if collection_name.nil?
+    raise ArgumentError.new('document_name cannot be nil') if document_name.nil?
+
+    @client.col(collection_name).doc(document_name)
+  end
+
+  # Reads the +data+ key within a Firestore document.
+  #
+  # @param collection_name [String] the name of the Firestore collection containing the document
+  # @param document_name [String] the name of the Firestore document
+  # @return [Object] document data
+  # @raise [ArgumentError] if collection_name or document_name are nil
   def read_document(collection_name, document_name)
     raise ArgumentError.new('collection_name cannot be nil') if collection_name.nil?
     raise ArgumentError.new('document_name cannot be nil') if document_name.nil?
@@ -42,12 +63,10 @@ class Firestore
   # The passed data are saved under a +data+ key within the document.
   # A timestamp at which the operation occurred is saved under the +updated+ key within the document.
   #
-  # Params:
-  # - collection_name: The name of the Firestore collection containing the document.
-  # - document_name: The name of the Firestore document.
-  # - data: Data to save to the Firestore document.
-  #
-  # An Argument error is raised if collection_name or document_name are nil.
+  # @param collection_name [String] the name of the Firestore collection containing the document
+  # @param document_name [String] the name of the Firestore document
+  # @param data [Object] data to save to the Firestore document
+  # @raise [ArgumentError] if collection_name or document_name are nil
   def save_document(collection_name, document_name, data)
     raise ArgumentError.new('collection_name cannot be nil') if collection_name.nil?
     raise ArgumentError.new('document_name cannot be nil') if document_name.nil?
