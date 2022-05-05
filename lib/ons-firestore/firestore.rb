@@ -80,8 +80,7 @@ class Firestore
     if data.is_a?(Hash)
       hash_data = {}
       data.each do |key, value|
-        hash_data[key] = value if value.is_a?(Array)
-        hash_data[key] = value.map(&:to_h) unless value.is_a?(Array)
+        hash_data[key] = value.class.method_defined?(:to_h) ? value.map(&:to_h) : value
       end
     end
 
