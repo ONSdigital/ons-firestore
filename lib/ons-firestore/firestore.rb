@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'google/cloud/firestore'
-require 'logger'
 
 require_relative 'firestore_error'
 
@@ -72,6 +71,7 @@ class Firestore
   # @param document_name [String] the name of the Firestore document
   # @param data [Object] data to save to the Firestore document
   # @raise [ArgumentError] if collection_name or document_name are nil
+  # @raise [FirestoreError] if an error occurred whilst saving the document
   def save_document(collection_name, document_name, data)
     raise ArgumentError.new('collection_name cannot be nil') if collection_name.nil?
     raise ArgumentError.new('document_name cannot be nil') if document_name.nil?
@@ -92,9 +92,7 @@ class Firestore
     begin
       document.set({ data: hash_data, updated: Time.now.strftime(DATE_TIME_FORMAT) })
     rescue StandardError => e
-      logger = Logger.new($stderr)
-      logger.error("Failed to save Firestore document #{document_name} in collection #{collection_name}: #{e.message}")
-      logger.error(e.backtrace.join("\n"))
+      raise FirestoreError("Failed to save Firestore document #{document_name} in collection #{collection_name}: #{e.message}")
     end
   end
 end
