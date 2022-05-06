@@ -3,6 +3,8 @@
 require 'google/cloud/firestore'
 require 'logger'
 
+require_relative 'firestore_error'
+
 # Class to manage access to Firestore.
 class Firestore
   # Format to use for the timestamp of the +updated+ key within the Firestore document.
@@ -49,12 +51,15 @@ class Firestore
   # @param document_name [String] the name of the Firestore document
   # @return [Object] document data
   # @raise [ArgumentError] if collection_name or document_name are nil
+  # @raise [FirestoreError] if the +data+ key isn't present within the Firestore document
   def read_document(collection_name, document_name)
     raise ArgumentError.new('collection_name cannot be nil') if collection_name.nil?
     raise ArgumentError.new('document_name cannot be nil') if document_name.nil?
 
     document = @client.col(collection_name).doc(document_name)
     snapshot = document.get
+    raise FirestoreError('data key is missing') if snapshot.data.nil?
+
     snapshot[:data]
   end
 
