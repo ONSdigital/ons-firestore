@@ -57,7 +57,7 @@ class Firestore
 
     document = @client.col(collection_name).doc(document_name)
     snapshot = document.get
-    raise FirestoreError('data key is missing') if snapshot.data.nil?
+    raise FirestoreError, 'data key is missing' if snapshot.data.nil?
 
     snapshot[:data]
   end
@@ -92,7 +92,7 @@ class Firestore
     begin
       document.set({ data: hash_data, updated: Time.now.strftime(DATE_TIME_FORMAT) })
     rescue StandardError => e
-      raise FirestoreError("Failed to save Firestore document #{document_name} in collection #{collection_name}: #{e.message}")
+      raise FirestoreError, "Failed to save Firestore document #{document_name} in collection #{collection_name}: #{e.message}"
     end
   end
 end
