@@ -44,6 +44,24 @@ class Firestore
     @client.col(collection_name).doc(document_name)
   end
 
+  # Reads the +updated+ key within a Firestore document.
+  #
+  # @param collection_name [String] the name of the Firestore collection containing the document
+  # @param document_name [String] the name of the Firestore document
+  # @return [Object] document updated timestamp
+  # @raise [ArgumentError] if collection_name or document_name are nil
+  # @raise [FirestoreError] if the +updated+ key isn't present within the Firestore document
+  def document_updated(collection_name, document_name)
+    raise ArgumentError.new('collection_name cannot be nil') if collection_name.nil?
+    raise ArgumentError.new('document_name cannot be nil') if document_name.nil?
+
+    document = @client.col(collection_name).doc(document_name)
+    snapshot = document.get
+    raise FirestoreError, 'updated key is missing' if snapshot.updated.nil?
+
+    snapshot[:updated]
+  end
+
   # Reads the +data+ key within a Firestore document.
   #
   # @param collection_name [String] the name of the Firestore collection containing the document
