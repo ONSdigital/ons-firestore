@@ -57,7 +57,7 @@ class Firestore
 
     document = @client.col(collection_name).doc(document_name)
     snapshot = document.get
-    raise FirestoreError, 'updated key is missing' if snapshot.updated.nil?
+    raise FirestoreError, 'updated key is missing' if snapshot[:updated].nil?
 
     snapshot[:updated]
   end
